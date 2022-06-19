@@ -10,7 +10,6 @@ export default function Answers({ setAnswers }: Props) {
   const [clicked2, setClicked2] = useState(false);
   const [clicked3, setClicked3] = useState(false);
   const [clicked4, setClicked4] = useState(false);
-  const [rating, setRating] = useState(0);
 
   const clickedStyle = { color: "#33b5e5" };
   const defaultStyle = {};
@@ -38,7 +37,7 @@ export default function Answers({ setAnswers }: Props) {
                   clicked1 === false
                 ) {
                   setClicked1(true);
-                  setRating(1);
+                  setAnswers("1");
                 } else {
                   setClicked1(false);
                 }
@@ -66,7 +65,7 @@ export default function Answers({ setAnswers }: Props) {
                   clicked1 === false
                 ) {
                   setClicked2(true);
-                  setRating(2);
+                  setAnswers("2");
                 } else {
                   setClicked2(false);
                 }
@@ -94,7 +93,7 @@ export default function Answers({ setAnswers }: Props) {
                   clicked1 === false
                 ) {
                   setClicked3(true);
-                  setRating(3);
+                  setAnswers("3");
                 } else {
                   setClicked3(false);
                 }
@@ -122,7 +121,7 @@ export default function Answers({ setAnswers }: Props) {
                   clicked1 === false
                 ) {
                   setClicked4(true);
-                  setRating(4);
+                  setAnswers("4");
                 } else {
                   setClicked4(false);
                 }
@@ -150,7 +149,7 @@ export default function Answers({ setAnswers }: Props) {
                   clicked1 === false
                 ) {
                   setClicked5(true);
-                  setRating(5);
+                  setAnswers("5");
                 } else {
                   setClicked5(false);
                 }
