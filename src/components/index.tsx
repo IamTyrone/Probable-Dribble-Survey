@@ -7,37 +7,79 @@ import Tab3 from "./tab3";
 import "antd/dist/antd.css";
 import Tab5 from "./tab5";
 import Tab4 from "./tab4";
-
-type Props = {};
+import { useSearchParams } from "react-router-dom";
+import axios from "axios";
 
 const { Step } = Steps;
 
-const steps = [
-  {
-    title: "First",
-    content: <Tab1 />,
-  },
-  {
-    title: "Second",
-    content: <Tab2 />,
-  },
-  {
-    title: "Third",
-    content: <Tab3 />,
-  },
-  {
-    title: "Fourth",
-    content: <Tab4 />,
-  },
-  {
-    title: "Last",
-    content: <Tab5 />,
-  },
-];
-
-export default function Main({}: Props) {
+export default function Main() {
   const [current, setCurrent] = useState(0);
-  const [ratings, setRatings] = useState({});
+  const [answer1, setAnswer1] = useState("");
+  const [answer2, setAnswer2] = useState("");
+  const [answer3, setAnswer3] = useState("");
+  const [answer4, setAnswer4] = useState("");
+  const [answer5, setAnswer5] = useState("");
+  const [answer6, setAnswer6] = useState("");
+  const [answer7, setAnswer7] = useState("");
+  const [answer8, setAnswer8] = useState("");
+  const [answer9, setAnswer9] = useState("");
+  const [answer10, setAnswer10] = useState("");
+  const [searchParams] = useSearchParams();
+
+  const steps = [
+    {
+      title: "First",
+      content: <Tab1 setAnswers1={setAnswer1} setAnswers2={setAnswer2} />,
+    },
+    {
+      title: "Second",
+      content: <Tab2 setAnswers3={setAnswer3} setAnswers4={setAnswer4} />,
+    },
+    {
+      title: "Third",
+      content: <Tab3 setAnswers5={setAnswer5} setAnswers6={setAnswer6} />,
+    },
+    {
+      title: "Fourth",
+      content: <Tab4 setAnswers7={setAnswer7} setAnswers8={setAnswer8} />,
+    },
+    {
+      title: "Last",
+      content: <Tab5 setAnswers9={setAnswer9} setAnswers10={setAnswer10} />,
+    },
+  ];
+
+  const url = searchParams.get("url");
+
+  const onSubmitHandler = () => {
+    const answers = [
+      { answer: answer1 },
+      { answer: answer2 },
+      { answer: answer3 },
+      { answer: answer4 },
+      { answer: answer5 },
+      { answer: answer6 },
+      { answer: answer7 },
+      { answer: answer8 },
+      { answer: answer9 },
+      { answer: answer10 },
+    ];
+    axios
+      .post("http://localhost:8000/api/questionaire", { url: url })
+      .then((res) => {
+        // eslint-disable-next-line array-callback-return
+        answers.map((answer) => {
+          axios.post(`http://localhost:8000/api/?url=${url}`, {
+            questionnaire: res.data.questionnaire,
+            answer: answer.answer,
+          });
+        });
+        message.success("Your review has been successfully submitted!");
+      })
+      .catch((err) => {
+        message.error("Something went wrong. Please try again later!");
+      });
+  };
 
   const next = () => {
     setCurrent(current + 1);
@@ -89,10 +131,7 @@ export default function Main({}: Props) {
                       </Button>
                     )}
                     {current === steps.length - 1 && (
-                      <Button
-                        type="primary"
-                        onClick={() => message.success("Processing complete!")}
-                      >
+                      <Button type="primary" onClick={onSubmitHandler}>
                         Done
                       </Button>
                     )}

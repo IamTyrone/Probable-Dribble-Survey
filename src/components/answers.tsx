@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 
-type Props = {};
+type Props = {
+  setAnswers: any;
+};
 
-export default function Answers({}: Props) {
+export default function Answers({ setAnswers }: Props) {
   const [clicked5, setClicked5] = useState(false);
   const [clicked1, setClicked1] = useState(false);
   const [clicked2, setClicked2] = useState(false);
