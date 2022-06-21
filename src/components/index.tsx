@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Tab1 from "./tab1";
 import { Button, message, Steps } from "antd";
 import Tab2 from "./tab2";
@@ -13,6 +13,7 @@ import axios from "axios";
 const { Step } = Steps;
 
 export default function Main() {
+  const [questions, setQuestions]: any = useState();
   const [current, setCurrent] = useState(0);
   const [answer1, setAnswer1] = useState("");
   const [answer2, setAnswer2] = useState("");
@@ -29,27 +30,35 @@ export default function Main() {
   const steps = [
     {
       title: "First",
-      content: <Tab1 setAnswers1={setAnswer1} setAnswers2={setAnswer2} />,
+      content: <Tab1 setAnswers1={setAnswer1} setAnswers2={setAnswer2} questions={questions} />,
     },
     {
       title: "Second",
-      content: <Tab2 setAnswers3={setAnswer3} setAnswers4={setAnswer4} />,
+      content: <Tab2 setAnswers3={setAnswer3} setAnswers4={setAnswer4} questions={questions} />,
     },
     {
       title: "Third",
-      content: <Tab3 setAnswers5={setAnswer5} setAnswers6={setAnswer6} />,
+      content: <Tab3 setAnswers5={setAnswer5} setAnswers6={setAnswer6} questions={questions} />,
     },
     {
       title: "Fourth",
-      content: <Tab4 setAnswers7={setAnswer7} setAnswers8={setAnswer8} />,
+      content: <Tab4 setAnswers7={setAnswer7} setAnswers8={setAnswer8} questions={questions} />,
     },
     {
       title: "Last",
-      content: <Tab5 setAnswers9={setAnswer9} setAnswers10={setAnswer10} />,
+      content: <Tab5 setAnswers9={setAnswer9} setAnswers10={setAnswer10} questions={questions}/>,
     },
   ];
 
   const url = searchParams.get("url");
+
+  useEffect(()=>{
+    axios.get("http://localhost:8000/api/questionaires/").then((res) => {
+      setQuestions(res.data)
+    }).catch((err) => {
+      message.error("Something went wrong. Please try again later!");
+    })
+  }, [])
 
   const onSubmitHandler = () => {
     const answers = [
@@ -64,14 +73,16 @@ export default function Main() {
       { answer: answer9 },
       { answer: answer10 },
     ];
+
     axios
-      .post("http://localhost:8000/api/questionaire", { url: url })
+      .post("http://localhost:8000/api/questionaires/", { website: url })
       .then((res) => {
         // eslint-disable-next-line array-callback-return
-        answers.map((answer) => {
-          axios.post(`http://localhost:8000/api/?url=${url}`, {
-            questionnaire: res.data.questionnaire,
-            answer: answer.answer,
+        answers.map((answer, key) => {
+          axios.post(`http://localhost:8000/api/answers/`, {
+            questionaire: res.data.id,
+            rating: answer.answer,
+            question: questions[key].id,
           });
         });
         message.success("Your review has been successfully submitted!");
