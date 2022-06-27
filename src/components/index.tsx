@@ -9,6 +9,7 @@ import Tab5 from "./tab5";
 import Tab4 from "./tab4";
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
+import SuggestionTab from "./suggestionTab";
 
 const { Step } = Steps;
 
@@ -26,6 +27,9 @@ export default function Main() {
   const [answer9, setAnswer9] = useState("");
   const [answer10, setAnswer10] = useState("");
   const [searchParams] = useSearchParams();
+  const [questionaireId, setQuestionaireId] = useState("");
+  const [suggestion, setSuggestion] = useState("")
+
 
   const steps = [
     {
@@ -48,13 +52,17 @@ export default function Main() {
       title: "Last",
       content: <Tab5 setAnswers9={setAnswer9} setAnswers10={setAnswer10} questions={questions}/>,
     },
+    {
+      title:"Suggestion",
+      content: <SuggestionTab setSuggestion={setSuggestion}/>
+    }
   ];
 
   const url = searchParams.get("url");
 
   useEffect(()=>{
-    axios.get("http://localhost:8000/api/questionaires/").then((res) => {
-      setQuestions(res.data)
+    axios.get("http://localhost:8000/api/v1/questions/").then((res) => {
+      setQuestions(res?.data)
     }).catch((err) => {
       message.error("Something went wrong. Please try again later!");
     })
@@ -75,22 +83,36 @@ export default function Main() {
     ];
 
     axios
-      .post("http://localhost:8000/api/questionaires/", { website: url })
+      .post("http://localhost:8000/api/v1/questionaires/", { website: url })
       .then((res) => {
+        setQuestionaireId(res?.data?.id);
         // eslint-disable-next-line array-callback-return
         answers.map((answer, key) => {
-          axios.post(`http://localhost:8000/api/answers/`, {
-            questionaire: res.data.id,
+          axios.post(`http://localhost:8000/api/v1/answers/`, {
+            questionaire: res?.data?.id,
             rating: answer.answer,
-            question: questions[key].id,
+            question: questions[key]?.id,
           });
         });
         message.success("Your review has been successfully submitted!");
+        next();
       })
       .catch((err) => {
         message.error("Something went wrong. Please try again later!");
       });
   };
+
+
+  const onSurveySubmission = () => {
+    axios.post("http://localhost:8000/api/v1/suggestions/", {
+      questionaire: questionaireId,
+      suggestion: suggestion,
+    }).then((res)=>{
+      message.success("Your review has been successfully submitted!");
+    }).catch((err)=>{
+      message.error("Failed to submit survey!");
+    });
+  }
 
   const next = () => {
     setCurrent(current + 1);
@@ -136,14 +158,19 @@ export default function Main() {
 
                   <div className="tab-content">{steps[current].content}</div>
                   <div className="wizard-footer">
-                    {current < steps.length - 1 && (
+                    {current < steps.length - 2 && (
                       <Button type="primary" onClick={() => next()}>
                         Next
                       </Button>
                     )}
-                    {current === steps.length - 1 && (
+                    {current === steps.length - 2 && (
                       <Button type="primary" onClick={onSubmitHandler}>
                         Done
+                      </Button>
+                    )}
+                    {current === steps.length - 1 && (
+                      <Button type="primary" onClick={onSurveySubmission}>
+                        Submit Survey
                       </Button>
                     )}
                     {current > 0 && (
