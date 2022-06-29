@@ -61,7 +61,7 @@ export default function Main() {
   const url = searchParams.get("url");
 
   useEffect(()=>{
-    axios.get("http://localhost:8000/api/v1/questions/").then((res) => {
+    axios.get("https://probable-dribble.herokuapp.com/api/v1/questions/").then((res) => {
       setQuestions(res?.data)
     }).catch((err) => {
       message.error("Something went wrong. Please try again later!");
@@ -83,12 +83,12 @@ export default function Main() {
     ];
 
     axios
-      .post("http://localhost:8000/api/v1/questionaires/", { website: url })
+      .post("https://probable-dribble.herokuapp.com/api/v1/questionaires/", { website: url })
       .then((res) => {
         setQuestionaireId(res?.data?.id);
         // eslint-disable-next-line array-callback-return
         answers.map((answer, key) => {
-          axios.post(`http://localhost:8000/api/v1/answers/`, {
+          axios.post(`https://probable-dribble.herokuapp.com/api/v1/answers/`, {
             questionaire: res?.data?.id,
             rating: answer.answer,
             question: questions[key]?.id,
@@ -104,7 +104,7 @@ export default function Main() {
 
 
   const onSurveySubmission = () => {
-    axios.post("http://localhost:8000/api/v1/suggestions/", {
+    axios.post("https://probable-dribble.herokuapp.com/api/v1/suggestions/", {
       questionaire: questionaireId,
       suggestion: suggestion,
     }).then((res)=>{
