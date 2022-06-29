@@ -11,14 +11,14 @@ export default function Tab5({ setAnswers9, setAnswers10, questions }: Props) {
   return (
     <>
       <div className="">
-        <h5 className="info-text">{questions && questions[8]?.question}? (checkboxes)</h5>
+        <h5 className="info-text">{questions && questions[8]?.question}?</h5>
         <Answers setAnswers={setAnswers9} />
       </div>
       <br />
       <br />
       <br />
       <div className="">
-        <h5 className="info-text">{questions && questions[9]?.question}? (checkboxes)</h5>
+        <h5 className="info-text">{questions && questions[9]?.question}?</h5>
         <Answers setAnswers={setAnswers10} />
       </div>
       <br />
