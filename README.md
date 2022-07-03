@@ -1,10 +1,26 @@
-# Getting Started with Create React App
+# Overview
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app), using the [Redux](https://redux.js.org/) and [Redux Toolkit](https://redux-toolkit.js.org/) TS template.
+The survey taker arrives at this application if they opt to take the survey. Located in the url is a queryp arameter, carrying the url of the website being reviewed.
+
+The User enters their score on each question. When they are done, they click the done button. The application then first makes a request to the backend to create a questionnaire with the
+url in the query parameter. Should that post request to create the questionnaire succeed, we then loop through all the answers given by the user, each instance in the loop creating a post request
+and creating an answer record to the questionnaire untill all questions are answered.
+
+
+After that, they are moved to a page where they can enter an explicit suggestion for how the institution can have their website look better for readers.
+
+At this point, the survey will be complete.
+
 
 ## Available Scripts
 
 In the project directory, you can run:
+
+
+### `npm install`
+
+Installs all dependencies in the package.json file.
+
 
 ### `npm start`
 
@@ -13,11 +29,6 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
 ### `npm run build`
 
